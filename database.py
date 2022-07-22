@@ -1,5 +1,6 @@
 import psycopg2
 import configparser 
+import gspread
 
 def config(filename='database.ini', section='postgresql'):
     # Create a parser for database amazon_search
