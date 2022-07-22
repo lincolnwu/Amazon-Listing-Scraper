@@ -5,9 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as wait 
 from selenium.webdriver.support import expected_conditions as EC 
 import pandas as pd
-import psycopg2
-import getpass 
-import configparser 
+from database import store_db, fetchDB
 
 # Global var to reset page each time
 next_page = ''
@@ -17,7 +15,7 @@ url = 'https://www.amazon.com'
 
 # Set up Selenium driver
 options = webdriver.ChromeOptions()
-options.add_argument('headless')
+# options.add_argument('headless')
 
 def scrape_amazon(keywordArg, max_pages):
     page_num = 1
@@ -87,12 +85,13 @@ def scrape_page(driver):
 
         # Dollars
         whole_price = item.find_elements(By.XPATH, './/span[@class="a-price-whole"]')
-
+        
         # Cents
         fraction_price = item.find_elements(By.XPATH, './/span[@class="a-price-fraction"]')
 
+        # Remove commas from prices > 1000
         if whole_price != [] and fraction_price != []:
-            price = '.'.join([whole_price[0].text, fraction_price[0].text])
+            price = '.'.join([whole_price[0].text.replace(",",""), fraction_price[0].text])
         else:
             price = 0
         product_price.append(price)
@@ -115,17 +114,25 @@ def scrape_page(driver):
         link = item.find_element(By.XPATH, './/a[@class="a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal"]').get_attribute("href")
         product_link.append(link)
 
+    print(product_price)
     # Create WebElement for next page
     global next_page
     next_page = driver.find_element(By.XPATH, './/a[@class="s-pagination-item s-pagination-button"]').get_attribute("href")
 
-result = {
-    'Product Name' : product_name,
-    'ASIN' : product_asin,
-    'Price' : product_price,
-    'Ratings' : product_ratings,
-    'Number of Ratings' : product_ratings_num,
-    'Product Link' : product_link
-}
-df = pd.DataFrame(result)
-print(df)
+    # Store page scraped data into database
+    store_db(product_asin, product_name, product_price, product_ratings, product_ratings_num, product_link)
+
+
+if __name__=='__main__':
+    scrape_amazon('lawnmower', 2)
+    # fetchDB()
+    # result = {
+    #     'Product Name' : product_name,
+    #     'ASIN' : product_asin,
+    #     'Price' : product_price,
+    #     'Ratings' : product_ratings,
+    #     'Number of Ratings' : product_ratings_num,
+    #     'Product Link' : product_link
+    # }
+    # df = pd.DataFrame(result)
+    # print(df)
