@@ -5,18 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as wait 
 from selenium.webdriver.support import expected_conditions as EC 
 import pandas as pd
-from database import store_db, fetchDB
+from database import store_db
 import gspread
-# from oauth2client.service_account import ServiceAccountCredentials
-
-# scopes = [
-#     'https://www.googleapis.com/auth/spreadsheets',
-#     'https://www.googleapis.com/auth/drive'
-# ]
-
-# gc = gspread.service_account(filename='credentials.json')
-
-# sg = gc.open("Amazon Listing Scraper")
 
 # Global var to reset page each time
 next_page = ''
@@ -80,11 +70,11 @@ def scrape_page(driver):
         # Prevent NoSuchElementException
         # Replaces find_elements
     items = wait(driver, 10).until(EC.presence_of_all_elements_located((By.XPATH, '//div[contains(@class, "s-result-item s-asin")]')))
-    # print(items)
 
     # Extract data from WebElements
         # Use item and not driver since we're now looking for sub-elements of the WebElement
         # Also why we start xpath using .// instead of // to show that we're only looking at the item instead of the entire page
+
     for item in items:
         name = item.find_element(By.XPATH, './/span[@class="a-size-medium a-color-base a-text-normal"]')
         product_name.append(name.text)
@@ -127,7 +117,6 @@ def scrape_page(driver):
         link = item.find_element(By.XPATH, './/a[@class="a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal"]').get_attribute("href")
         product_link.append(link)
 
-    print(product_price)
     # Create WebElement for next page
     global next_page
     next_page = driver.find_element(By.XPATH, './/a[@class="s-pagination-item s-pagination-button"]').get_attribute("href")
@@ -140,24 +129,8 @@ def scrape_page(driver):
         sh.sheet1.append_row(row)
 
     # Store page's scraped data into database
-    # store_db(product_asin, product_name, product_price, product_ratings, product_ratings_num, product_link)
+    store_db(product_asin, product_name, product_price, product_ratings, product_ratings_num, product_link)
 
 
 if __name__=='__main__':
     scrape_amazon('lawnmower', 1)
-    # fetchDB()
-    # result = {
-    #     'Product Name' : product_name,
-    #     'ASIN' : product_asin,
-    #     'Price' : product_price,
-    #     'Ratings' : product_ratings,
-    #     'Number of Ratings' : product_ratings_num,
-    #     'Product Link' : product_link
-    # }
-    # df = pd.DataFrame(result)
-    # print(df)
-
-    # gc = gspread.service_account(filename='credentials.json')
-
-    # sh = gc.open("Amazon Listing Scraper")
-    # print(sh.sheet1.get("A1"))

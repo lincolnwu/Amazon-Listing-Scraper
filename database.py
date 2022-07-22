@@ -1,6 +1,5 @@
 import psycopg2
 import configparser 
-import gspread
 
 def config(filename='database.ini', section='postgresql'):
     # Create a parser for database amazon_search
@@ -64,23 +63,3 @@ def store_db(product_asin, product_name, product_price, product_ratings, product
     conn.commit()
     conn.close()
     print("Session ending....")
-
-def fetchDB():
-    conn = None
-
-    params = config()
-    conn = psycopg2.connect(**params)
-    print('Connecting to PostgreSQL database...')
-
-    # Don't auto commit
-    conn.autocommit = True
-
-    cursor = conn.cursor()
-
-    # cursor.execute('''SELECT * from search_result''')
-
-    # Fetch first row
-    # result = cursor.fetchone()
-    # print(result)
-
-    conn.close()
