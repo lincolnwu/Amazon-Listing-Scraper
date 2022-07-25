@@ -106,7 +106,6 @@ def scrape_page(driver):
 				med = False
 			
 		# name = item.find_element(By.XPATH, './/span[@class="a-size-base-plus a-color-base a-text-normal"]')
-		
 		# name = item.find_element(By.XPATH, './/span[@class="a-size-medium a-color-base a-text-normal"]')
 
 		product_name.append(name.text)
