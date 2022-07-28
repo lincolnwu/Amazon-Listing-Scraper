@@ -33,3 +33,9 @@ the link to the product. In addition, the user can choose to store the scraped r
 - Google Spreadsheets API
 - PostgreSQL
 - Tkinter
+
+# Example Results
+## PostgreSQL viewed using pgAdmin
+![alt text](https://github.com/lincolnwu/Amazon-Listing-Scraper/blob/master/als_psql_table.png)
+## Google Spreadsheets
+![alt text](https://github.com/lincolnwu/Amazon-Listing-Scraper/blob/master/als_gspread_table.png)
