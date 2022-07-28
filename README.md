@@ -13,12 +13,11 @@ the link to the product. In addition, the user can choose to store the scraped r
 ## Setting up PostgreSQL
 1. Create a file named `database.ini`
 2. Enter credentials in the following format:
-
- `[postgresql]<br>
-  host=localhost<br>
-  dbname=[your database name]<br>
-  user=[your username]<br>
-  password=[your password]`
+ `[postgresql]`<br>
+ `host=localhost`<br>
+ `dbname=[your database name]`<br>
+ `user=[your username]`<br>
+ `password=[your password]`
 
 ## Setting up Google Spreadsheets
 1. Enable Google Drive and Google Spreadsheets API at https://console.cloud.google.com/
