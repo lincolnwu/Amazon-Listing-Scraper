@@ -13,6 +13,7 @@ the link to the product. In addition, the user can choose to store the scraped r
 ## Setting up PostgreSQL
 1. Create a file named `database.ini`
 2. Enter credentials in the following format:
+ 
  `[postgresql]`<br>
  `host=localhost`<br>
  `dbname=[your database name]`<br>
